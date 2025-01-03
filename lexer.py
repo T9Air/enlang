@@ -41,7 +41,7 @@ class Lexer:
             self.advance()
         return None
 
-    def get_integer(self):
+    def get_number(self):
         result = ''
         while self.current_char is not None and self.current_char.isdigit():
             result += self.current_char
@@ -81,7 +81,7 @@ class Lexer:
                     self.skip_whitespace()
             
             elif self.current_char.isdigit():
-                tokens.append(Token('NUMBER', self.get_integer()))
+                tokens.append(Token('NUMBER', self.get_number()))
             
             elif self.current_char == '"':
                 tokens.append(Token('STRING', self.get_string()))
@@ -103,13 +103,83 @@ class Lexer:
                             identifier = self.get_identifier()
                             if identifier == 'now':
                                 tokens.append(Token('KEYWORD', 'assign'))
+                            else:
+                                tokens.append(Token('IDENTIFIER', 'is'))
+                                continue
+                    case 'create':
+                        tokens.append(Token('KEYWORD', 'create_function'))
+                    case 'run':
+                        tokens.append(Token('KEYWORD', 'run_function'))
+                    case 'if':
+                        tokens.append(Token('KEYWORD', 'if'))
+                    case 'otherwise':
+                        tokens.append(Token('KEYWORD', 'else'))
+                    case 'output':
+                        tokens.append(Token('KEYWORD', 'print'))
+                    case 'input':
+                        tokens.append(Token('KEYWORD', 'input'))
+                    case 'repeat':
+                        self.skip_whitespace()
+                        if self.current_char and self.current_char.isdigit():
+                            number = self.get_number()
+                            self.skip_whitespace()
+                            identifier = self.get_identifier()
+                            if identifier == 'times':
+                                tokens.append(Token('KEYWORD', 'for_loop'))
+                                tokens.append(Token('NUMBER', number))
+                            else:
+                                tokens.append(Token('IDENTIFIER', 'repeat'))
+                                tokens.append(Token('NUMBER', number))
+                                tokens.append(Token('IDENTIFIER', identifier))
+                        elif self.current_char and self.current_char.isalpha():
+                            identifier = self.get_identifier()
+                            if identifier == 'until':
+                                tokens.append(Token('KEYWORD', 'while_loop'))
+                                continue
+                            else:
+                                self.skip_whitespace()
+                                next_identifier = self.get_identifier()
+                                if next_identifier == 'times':
+                                    tokens.append(Token('KEYWORD', 'for_loop'))
+                                    tokens.append(Token('IDENTIFIER', identifier))
+                                else:
+                                    tokens.append(Token('IDENTIFIER', 'repeat'))
+                                    tokens.append(Token('IDENTIFIER', identifier))
+                        else:
+                            tokens.append(Token('IDENTIFIER', 'repeat'))
+                            continue
                     case _:
                         tokens.append(Token('IDENTIFIER', identifier))
+            
+            elif self.current_char in ['=', '>', '<', '!']:
+                compare = self.current_char
+                self.advance()
+                if self.current_char in ['=', '>', '<', '!']:
+                    compare += self.current_char
+                else:
+                    self.unadvance()
+                
+                match compare:
+                    case '=' | '==':
+                        tokens.append(Token('COMPARE', '=='))
+                    case '!=' | '=!':
+                        tokens.append(Token('COMPARE', '!='))
+                    case '>=' | '=>':
+                        tokens.append(Token('COMPARE', '>='))
+                    case '<=' | '=<':
+                        tokens.append(Token('COMPARE', '<='))
+                    case '>':
+                        tokens.append(Token('COMPARE', '>'))
+                    case '<':
+                        tokens.append(Token('COMPARE', '<'))
+                    
+                self.advance()
+            
             self.advance()
         
         return tokens
     
-input_text = '''x is now "sjdoif"
+input_text = '''x is now input
 '''
 lexer = Lexer(input_text)
 tokens = lexer.tokenize()
