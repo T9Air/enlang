@@ -178,9 +178,10 @@ class Lexer:
             self.advance()
         
         return tokens
-    
-input_text = '''x is now input
-'''
-lexer = Lexer(input_text)
-tokens = lexer.tokenize()
-print("Tokens:", tokens)
+
+if __name__ == '__main__':    
+    input_text = '''x is now input
+    '''
+    lexer = Lexer(input_text)
+    tokens = lexer.tokenize()
+    print("Tokens:", tokens)
