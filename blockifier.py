@@ -78,16 +78,16 @@ class Blockifier:
 
 if __name__ == '__main__':        
     input_text = '''x is now input
-        dnn
-        fd
-            jsdio
-        sd3
-            jd
-                jio
-    ds
-        jsid
-    sjd
-    '''
+    dnn
+    fd
+        jsdio
+    sd3
+        jd
+            jio
+ds
+    jsid
+sjd
+'''
     lexer = Lexer(input_text)
     tokens = lexer.tokenize()
     blockifier = Blockifier(tokens)

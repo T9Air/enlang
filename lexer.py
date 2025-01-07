@@ -70,6 +70,8 @@ class Lexer:
         while self.current_char:
             if self.current_char.isspace():
                 if self.current_char == '\n':
+                    if self.pos != 0:
+                        tokens.append(Token('NEWLINE', '\n'))
                     spaces = 0
                     while self.current_char and self.current_char.isspace():
                         spaces += 1
