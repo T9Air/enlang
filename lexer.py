@@ -110,8 +110,12 @@ class Lexer:
                                 continue
                     case 'create':
                         tokens.append(Token('KEYWORD', 'create_function'))
+                        self.skip_whitespace()
+                        tokens.append(Token('FUNCTION', self.get_identifier()))
                     case 'run':
                         tokens.append(Token('KEYWORD', 'run_function'))
+                        self.skip_whitespace()
+                        tokens.append(Token('FUNCTION', self.get_identifier()))
                     case 'if':
                         tokens.append(Token('KEYWORD', 'if'))
                     case 'otherwise':
