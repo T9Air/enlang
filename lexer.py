@@ -106,7 +106,7 @@ class Lexer:
                             if identifier == 'now':
                                 tokens.append(Token('KEYWORD', 'assign'))
                             else:
-                                tokens.append(Token('IDENTIFIER', 'is'))
+                                tokens.append(Token('VARIABLE', 'is'))
                                 continue
                     case 'create':
                         tokens.append(Token('KEYWORD', 'create_function'))
@@ -134,9 +134,9 @@ class Lexer:
                                 tokens.append(Token('KEYWORD', 'for_loop'))
                                 tokens.append(Token('NUMBER', number))
                             else:
-                                tokens.append(Token('IDENTIFIER', 'repeat'))
+                                tokens.append(Token('VARIABLE', 'repeat'))
                                 tokens.append(Token('NUMBER', number))
-                                tokens.append(Token('IDENTIFIER', identifier))
+                                tokens.append(Token('VARIABLE', identifier))
                         elif self.current_char and self.current_char.isalpha():
                             identifier = self.get_identifier()
                             if identifier == 'until':
@@ -147,15 +147,15 @@ class Lexer:
                                 next_identifier = self.get_identifier()
                                 if next_identifier == 'times':
                                     tokens.append(Token('KEYWORD', 'for_loop'))
-                                    tokens.append(Token('IDENTIFIER', identifier))
+                                    tokens.append(Token('VARIABLE', identifier))
                                 else:
-                                    tokens.append(Token('IDENTIFIER', 'repeat'))
-                                    tokens.append(Token('IDENTIFIER', identifier))
+                                    tokens.append(Token('VARIABLE', 'repeat'))
+                                    tokens.append(Token('VARIABLE', identifier))
                         else:
-                            tokens.append(Token('IDENTIFIER', 'repeat'))
+                            tokens.append(Token('VARIABLE', 'repeat'))
                             continue
                     case _:
-                        tokens.append(Token('IDENTIFIER', identifier))
+                        tokens.append(Token('VARIABLE', identifier))
             
             elif self.current_char in ['=', '>', '<', '!']:
                 compare = self.current_char
