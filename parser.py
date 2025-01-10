@@ -217,7 +217,7 @@ class Parser:
                     if block.block_name == self.current_token:
                         if_block = block.code
                 self.advance()
-                if self.current_token.value == 'else':
+                if isinstance(self.current_token, Keyword) and self.current_token.value == 'else':
                     else_block = None
                     self.advance()
                     self.advance()
@@ -283,9 +283,8 @@ class Parser:
 
 if __name__ == '__main__':
     input_text = '''
-create hello
-    output "Hi"
-run hello
+if x = 5
+    output "Hello"
 '''
     lexer = Lexer(input_text)
     tokens = lexer.tokenize()
