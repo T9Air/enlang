@@ -141,6 +141,7 @@ class Lexer:
                             identifier = self.get_identifier()
                             if identifier == 'until':
                                 tokens.append(Token('KEYWORD', 'while_loop'))
+                                self.skip_whitespace()
                                 continue
                             else:
                                 self.skip_whitespace()
@@ -186,7 +187,7 @@ class Lexer:
         return tokens
 
 if __name__ == '__main__':    
-    input_text = '''x is now input
+    input_text = '''repeat until x = 8
     '''
     lexer = Lexer(input_text)
     tokens = lexer.tokenize()
