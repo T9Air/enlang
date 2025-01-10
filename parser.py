@@ -91,6 +91,26 @@ class IfElse:
         return result
     def __repr__(self):
         return self.__str__()
+class ForLoop:
+    def __init__(self, count, body):
+        self.count = count
+        self.body = body
+    def __str__(self):
+        result = f'ForLoop: Amount: {self.count.__str__()}'
+        result += f'         Body: {self.body.__str__()}'
+        return result
+    def __repr__(self):
+        return self.__str__()
+class WhileLoop:
+    def __init__(self, condition, body):
+        self.condition = condition
+        self.body = body
+    def __str__(self):
+        result = f'WhileLoop: {self.condition.__str__()}'
+        result += f'           Body: {self.body.__str__()}'
+        return result
+    def __repr__(self):
+        return self.__str__()    
 
 class Parser:
     def __init__(self, blocks):
@@ -191,7 +211,27 @@ class Parser:
                     left = IfElse(condition, if_block, else_block)
                 else:
                     left = IfElse(condition, if_block)
-            
+            elif left.value == 'for_loop':
+                right = self.get_term()
+                self.advance()
+                for block in ast:
+                    if block.block_name == self.current_token:
+                        body = block.code
+                print(self.current_token)
+                left = ForLoop(right, body)
+                self.advance()
+            elif left.value == 'while_loop':
+                right = self.get_term()
+                comparison = self.get_term()
+                left = self.get_term()
+                condition = Condition(right, left, comparison)
+                self.advance()
+                self.advance()
+                for block in ast:
+                    if block.block_name == self.current_token:
+                        body = block.code
+                left = WhileLoop(condition, body)
+
         elif left:
             if self.current_token.type == 'OPERATOR':
                 op = self.get_term()
@@ -215,10 +255,8 @@ class Parser:
 
 if __name__ == '__main__':
     input_text = '''
-if x == 5
-    output x
-otherwise
-    output x + 1
+repeat until x = 8
+    output 7
 '''
     lexer = Lexer(input_text)
     tokens = lexer.tokenize()
