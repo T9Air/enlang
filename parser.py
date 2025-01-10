@@ -111,6 +111,23 @@ class WhileLoop:
         return result
     def __repr__(self):
         return self.__str__()    
+class CreateFunction:
+    def __init__(self, name, body):
+        self.name = name
+        self.body = body
+    def __str__(self):
+        result = f'CreateFunction: {self.name}'
+        result += f'               Body: {self.body.__str__()}'
+        return result
+    def __repr__(self):
+        return self.__str__()
+class RunFunction:
+    def __init__(self, name):
+        self.name = name
+    def __str__(self):
+        return f'RunFunction: {self.name}'
+    def __repr__(self):
+        return self.__str__()
 
 class Parser:
     def __init__(self, blocks):
@@ -231,6 +248,17 @@ class Parser:
                     if block.block_name == self.current_token:
                         body = block.code
                 left = WhileLoop(condition, body)
+            elif left.value == 'create_function':
+                right = self.get_term()
+                self.advance()
+                for block in ast:
+                    if block.block_name == self.current_token:
+                        body = block.code
+                left = CreateFunction(right, body)
+                self.advance()
+            elif left.value == 'run_function':
+                right = self.get_term()
+                left = RunFunction(right)
 
         elif left:
             if self.current_token.type == 'OPERATOR':
@@ -255,8 +283,9 @@ class Parser:
 
 if __name__ == '__main__':
     input_text = '''
-repeat until x = 8
-    output 7
+create hello
+    output "Hi"
+run hello
 '''
     lexer = Lexer(input_text)
     tokens = lexer.tokenize()
