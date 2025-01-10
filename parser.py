@@ -12,7 +12,15 @@ class Body:
     
     def __repr__(self):
         return self.__str__()
-
+        
+    def __iter__(self):
+        return iter(self.statements)
+        
+    def __len__(self):
+        return len(self.statements)
+        
+    def __getitem__(self, index):
+        return self.statements[index]
 class Number:
     def __init__(self, value):
         self.value = value
@@ -59,7 +67,7 @@ class Condition:
         return self.__str__()
 # Operations
 class BinOp:
-    def __init__(self, left, right, op):
+    def __init__(self, left, op, right):
         self.left = left
         self.right = right
         self.op = op
@@ -218,8 +226,9 @@ class Parser:
                     right = self.get_term()
                     if self.current_token.type == 'OPERATOR':
                         op = self.current_token.value
+                        self.advance()
                         next = self.get_term()
-                        right = BinOp(right, next, op)
+                        right = BinOp(right, op, next)
                     left = Print(right)
             elif left.value == 'if':
                 right = self.get_term()
@@ -278,7 +287,7 @@ class Parser:
             if self.current_token.type == 'OPERATOR':
                 op = self.get_term()
                 right = self.get_term()
-                left = BinOp(left, right, op)
+                left = BinOp(left, op, right)
             elif self.current_token.type == 'KEYWORD':
                 if self.current_token.value == 'assign':
                     self.advance()
@@ -290,15 +299,14 @@ class Parser:
                         op = self.current_token.value
                         self.advance()
                         next_num = self.get_term()
-                        right = BinOp(right, next_num, op)
+                        right = BinOp(right, op, next_num)
                     left = Assign(left.name, right)
                     
         return left
 
 if __name__ == '__main__':
     input_text = '''
-if x = 5
-    output "Hello"
+x is now 0 plus 7
 '''
     lexer = Lexer(input_text)
     tokens = lexer.tokenize()
