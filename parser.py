@@ -2,6 +2,17 @@ from lexer import Lexer
 from blockifier import Blockifier, Block
 
 # Basics
+class Body:
+    def __init__(self, statements):
+        self.statements = statements
+    
+    def __str__(self):
+        result = f'{self.statements}'
+        return result
+    
+    def __repr__(self):
+        return self.__str__()
+
 class Number:
     def __init__(self, value):
         self.value = value
@@ -175,7 +186,10 @@ class Parser:
         ast = []
         while self.current_block:
             ast.append(self.parse_block())
-        return ast 
+        final_block = ast[-1]
+        final_block = final_block.code
+        ast = final_block
+        return Body(ast)
     def parse_block(self):
         block_num = self.block_pos
         block = []
@@ -191,7 +205,7 @@ class Parser:
             if line:
                 block.append(line)
         this_block = self.blocks[self.block_pos + 1]
-        return Block(this_block.block_name, block)
+        return Block(this_block.block_name, Body(block))
     
     def parse_expression(self):
         left = self.get_term()
@@ -215,7 +229,7 @@ class Parser:
                 self.advance()
                 for block in ast:
                     if block.block_name == self.current_token:
-                        if_block = block.code
+                        if_block = Body(block.code)
                 self.advance()
                 if isinstance(self.current_token, Keyword) and self.current_token.value == 'else':
                     else_block = None
@@ -223,7 +237,7 @@ class Parser:
                     self.advance()
                     for block in ast:
                         if block.block_name == self.current_token:
-                            else_block = block.code
+                            else_block = Body(block.code)
                     self.advance()
                     left = IfElse(condition, if_block, else_block)
                 else:
@@ -233,7 +247,7 @@ class Parser:
                 self.advance()
                 for block in ast:
                     if block.block_name == self.current_token:
-                        body = block.code
+                        body = Body(block.code)
                 print(self.current_token)
                 left = ForLoop(right, body)
                 self.advance()
@@ -246,14 +260,14 @@ class Parser:
                 self.advance()
                 for block in ast:
                     if block.block_name == self.current_token:
-                        body = block.code
+                        body = Body(block.code)
                 left = WhileLoop(condition, body)
             elif left.value == 'create_function':
                 right = self.get_term()
                 self.advance()
                 for block in ast:
                     if block.block_name == self.current_token:
-                        body = block.code
+                        body = Body(block.code)
                 left = CreateFunction(right, body)
                 self.advance()
             elif left.value == 'run_function':
