@@ -1,6 +1,7 @@
 from lexer import Lexer
 from blockifier import Blockifier
 from parser import Parser
+import random
 
 class Interpreter:
     def __init__(self, ast):
@@ -112,16 +113,15 @@ class Interpreter:
     def visit_Body(self, node):
         for statement in node.statements:
             self.visit(statement)
+    def visit_Random(self, node):
+        min = self.visit(node.min)
+        max = self.visit(node.max)
+        return random.randint(max, min)
 
 if __name__ == '__main__':
     input_text = '''
-create jimmy
-    create name
-        name is now "Jimmy"
-    output "Hello, World!"
-run jimmy
-run name
-output name
+x is now number between 1 and 10
+output x
 '''
     lexer = Lexer(input_text)
     tokens = lexer.tokenize()
