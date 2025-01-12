@@ -160,27 +160,30 @@ class Lexer:
                         identifier = self.get_identifier()
                         if identifier == 'between':
                             self.skip_whitespace()
-                            if self.current_char and self.current_char.isdigit():
-                                number1 = self.get_number()
+                            if self.current_char and (self.current_char.isdigit() or self.current_char.isalpha()):
+                                if self.current_char.isdigit():
+                                    bound1 = Token('NUMBER', self.get_number())
+                                else:
+                                    bound1 = Token('VARIABLE', self.get_identifier())
+                                
                                 self.skip_whitespace()
                                 identifier = self.get_identifier()
                                 if identifier == 'and':
                                     self.skip_whitespace()
-                                    if self.current_char and self.current_char.isdigit():
-                                        number2 = self.get_number()
+                                    if self.current_char and (self.current_char.isdigit() or self.current_char.isalpha()):
+                                        if self.current_char.isdigit():
+                                            bound2 = Token('NUMBER', self.get_number())
+                                        else:
+                                            bound2 = Token('VARIABLE', self.get_identifier())
+                                            
                                         tokens.append(Token('KEYWORD', 'random'))
-                                        tokens.append(Token('NUMBER', number1))
-                                        tokens.append(Token('NUMBER', number2))
+                                        tokens.append(bound1)
+                                        tokens.append(bound2)
                                     else:
-                                        tokens.append(Token('VARIABLE', 'number'))
-                                        tokens.append(Token('VARIABLE', 'between'))
-                                        tokens.append(Token('NUMBER', number1))
+                                        tokens.extend([Token('VARIABLE', 'number'), Token('VARIABLE', 'between'), bound1])
                                         self.unadvance()
                                 else:
-                                    tokens.append(Token('VARIABLE', 'number'))
-                                    tokens.append(Token('VARIABLE', 'between'))
-                                    tokens.append(Token('NUMBER', number1))
-                                    tokens.append(Token('VARIABLE', identifier))
+                                    tokens.extend([Token('VARIABLE', 'number'), Token('VARIABLE', 'between'), bound1, Token('VARIABLE', identifier)])
                             else:
                                 tokens.append(Token('VARIABLE', 'number'))
                                 tokens.append(Token('VARIABLE', 'between'))
@@ -220,7 +223,7 @@ class Lexer:
         return tokens
 
 if __name__ == '__main__':    
-    input_text = '''x is now number between 1 and 10
+    input_text = '''x is now number between 1 and sjiodsj
     '''
     lexer = Lexer(input_text)
     tokens = lexer.tokenize()
