@@ -91,6 +91,10 @@ class Lexer:
             elif self.current_char.isalpha():
                 identifier = self.get_identifier()
                 match identifier:
+                    case 'Comment':
+                        while self.current_char != '\n':
+                            self.advance()
+                        self.advance()
                     case 'plus':
                         tokens.append(Token('OPERATOR', '+'))
                     case 'minus':
@@ -223,7 +227,8 @@ class Lexer:
         return tokens
 
 if __name__ == '__main__':    
-    input_text = '''x is now number between 1 and sjiodsj
+    input_text = '''Comment: h
+output "Hello, World!"
     '''
     lexer = Lexer(input_text)
     tokens = lexer.tokenize()
