@@ -4,10 +4,14 @@ from parser import Parser
 import random
 
 class Interpreter:
-    def __init__(self, ast):
+    def __init__(self, ast, testing_mode=False, test_input=None):
         self.ast = ast
         self.variables = {}
         self.functions = {}
+        self.testing_mode = testing_mode
+        self.test_output = []
+        self.test_input = test_input or []
+
     def interpret(self):
         return self.visit(self.ast)
     def visit(self, node):
@@ -98,6 +102,10 @@ class Interpreter:
     def visit_Assign(self, node):
         self.variables[node.name] = self.visit(node.value)
     def visit_Input(self, node):
+        if self.testing_mode:
+            if self.test_input:
+                return float(self.test_input.pop(0))
+            return random.randint(1, 100)  # fallback if no test input provided
         input_value = input(f"Input value for {node.var_name}: ")
         if input_value.isdigit():
             return float(input_value)
@@ -105,7 +113,11 @@ class Interpreter:
             return input_value
     def visit_Print(self, node):
         value = self.visit(node.value)
-        print(value)
+        if self.testing_mode:
+            self.test_output.append(value)
+            return value
+        else:
+            print(value)
     def visit_str(self, node):
         return node
     def visit_String(self, node):
@@ -120,7 +132,8 @@ class Interpreter:
 
 if __name__ == '__main__':
     input_text = '''
-output number between 9384082340823 and 349053048503498
+Comment: Comment test
+output "Hello, World!"
 '''
     lexer = Lexer(input_text)
     tokens = lexer.tokenize()
@@ -128,5 +141,5 @@ output number between 9384082340823 and 349053048503498
     blocks = blockifier.blockify()
     parser = Parser(blocks)
     parsed_blocks = parser.parse_blocks()
-    interpreter = Interpreter(parsed_blocks)
+    interpreter = Interpreter(parsed_blocks, testing_mode=False)
     interpreter.interpret()
