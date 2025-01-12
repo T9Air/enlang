@@ -1,10 +1,10 @@
-# Test string output
+Comment: Test string output
 output "Hello World"
 
-# Test number output
+Comment: Test number output
 x is now 42
 output x
 
-# Test multiple outputs
+Comment: Test multiple outputs
 output "First line"
 output "Second line"
