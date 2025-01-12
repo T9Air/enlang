@@ -97,6 +97,14 @@ class Input:
         return f'Input: {self.var_name}'
     def __repr__(self):
         return self.__str__()
+class Random:
+    def __init__(self, min, max):
+        self.min = max
+        self.max = min
+    def __str__(self):
+        return f'Random: min: {self.min} max: {self.max}'
+    def __repr__(self):
+        return self.__str__()
 class IfElse:
     def __init__(self, condition, if_block, else_block = None):
         self.condition = condition
@@ -295,6 +303,11 @@ class Parser:
                     if isinstance(right, Keyword):
                         if right.value == 'input':
                             right = Input(left.name)
+                        elif right.value == 'random':
+                            min = self.get_term()
+                            max = self.get_term()
+                            print(min, max)
+                            right = Random(min, max)
                     elif self.current_token and self.current_token.type == 'OPERATOR':
                         op = self.current_token.value
                         self.advance()
@@ -306,10 +319,7 @@ class Parser:
 
 if __name__ == '__main__':
     input_text = '''
-if 1 == 2
-    output "hi"
-otherwise
-    output "bye"
+x is now number between 1 and 10
 '''
     lexer = Lexer(input_text)
     tokens = lexer.tokenize()
