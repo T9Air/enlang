@@ -47,9 +47,9 @@ def main():
         'function_test.enl',
         'loops_test.enl',
         'output_test.enl',
-        'input_test.enl',
+        'variables_test.enl',
         'guessing_game_test.enl',
-        'interactive_loop_test.enl',
+        'loops_test.enl',
         'temperature_converter.enl',
         'counter_test.enl'
     ]
