@@ -9,6 +9,7 @@ repeat until guessed == target
     guess is now input
     attempts is now attempts plus 1
     
+    output guess
     if guess < target
         output "Too low!"
     otherwise
