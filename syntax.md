@@ -5,6 +5,17 @@
 - Declared implicitly.
 - Example: `x is now 10`
 
+## Comments
+
+- Start comments with `Comment:`
+- Comments must not be on a line with other code
+- Do not put comments on the last line of a file
+- Examples:
+
+  ```enlang
+  Comment: This is a comment
+  ```
+
 ## Printing
 
 - Use the `output` keyword followed by a string, number, or variable.
