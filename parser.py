@@ -259,7 +259,6 @@ class Parser:
                 for block in ast:
                     if block.block_name == self.current_token:
                         body = Body(block.code)
-                print(self.current_token)
                 left = ForLoop(right, body)
                 self.advance()
             elif left.value == 'while_loop':
