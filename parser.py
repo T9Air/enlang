@@ -135,7 +135,7 @@ class WhileLoop:
         self.right = right
         self.body = body
     def __str__(self):
-        result = f'WhileLoop: {self.condition.__str__()}'
+        result = f'WhileLoop: Condition: {self.left.__str__()} {self.op} {self.right.__str__()}'
         result += f'           Body: {self.body.__str__()}'
         return result
     def __repr__(self):
@@ -278,7 +278,6 @@ class Parser:
                 left = self.get_term()
                 comparison = self.get_term()
                 right = self.get_term()
-                self.advance()
                 self.advance()
                 for block in ast:
                     if block.block_name == self.current_token:
