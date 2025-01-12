@@ -1,6 +1,7 @@
 x is now 5
 y is now 10
-if x plus y == 15
+z is now x plus y
+if z == 15
     output "Test passed"
 otherwise
     output "Test failed"
