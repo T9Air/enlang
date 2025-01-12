@@ -306,7 +306,6 @@ class Parser:
                         elif right.value == 'random':
                             min = self.get_term()
                             max = self.get_term()
-                            print(min, max)
                             right = Random(min, max)
                     elif self.current_token and self.current_token.type == 'OPERATOR':
                         op = self.current_token.value
