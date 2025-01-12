@@ -78,6 +78,18 @@
           output "Nested loops example"
   ```
 
+## Random Numbers
+
+- Generate random numbers using `number between <min> and <max>`
+- Can use variables or numbers as the minimum and maximum
+- Can be used in assignments and output statements
+- Examples:
+
+  ```enlang
+  x is now number between 1 and 10
+  output number between 1 and total
+  ```
+
 ## Functions
 
 - Create with `create <functionName>`
