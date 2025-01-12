@@ -121,8 +121,10 @@ class ForLoop:
     def __repr__(self):
         return self.__str__()
 class WhileLoop:
-    def __init__(self, condition, body):
-        self.condition = condition
+    def __init__(self, left, op, right, body):
+        self.left = left
+        self.op = op
+        self.right = right
         self.body = body
     def __str__(self):
         result = f'WhileLoop: {self.condition.__str__()}'
@@ -261,16 +263,15 @@ class Parser:
                 left = ForLoop(right, body)
                 self.advance()
             elif left.value == 'while_loop':
-                right = self.get_term()
-                comparison = self.get_term()
                 left = self.get_term()
-                condition = Condition(right, left, comparison)
+                comparison = self.get_term()
+                right = self.get_term()
                 self.advance()
                 self.advance()
                 for block in ast:
                     if block.block_name == self.current_token:
                         body = Body(block.code)
-                left = WhileLoop(condition, body)
+                left = WhileLoop(left, comparison, right, body)
             elif left.value == 'create_function':
                 right = self.get_term()
                 self.advance()
