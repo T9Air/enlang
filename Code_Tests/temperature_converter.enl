@@ -1,0 +1,11 @@
+output "Temperature Converter"
+output "Enter Fahrenheit temperature:"
+fahrenheit is now input
+
+Comment: Convert to Celsius: (F - 32) * 5/9
+temp1 is now fahrenheit minus 32
+temp2 is now temp1 times 5
+celsius is now temp2 divide 9
+
+output "Temperature in Celsius:"
+output celsius

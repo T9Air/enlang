@@ -1,0 +1,8 @@
+create testFunction
+    x is now 10
+    if x == 10
+        output "Function test passed"
+    otherwise
+        output "Function test failed"
+
+run testFunction

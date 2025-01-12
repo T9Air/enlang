@@ -1,0 +1,21 @@
+a is now 5
+b is now 5
+c is now 10
+
+Comment: Equality test
+if a == b
+    output "Equality test passed"
+otherwise
+    output "Equality test failed"
+
+Comment: Greater than test
+if c > a
+    output "Greater than test passed"
+otherwise
+    output "Greater than test failed"
+
+Comment: Less than test
+if a < c
+    output "Less than test passed"
+otherwise
+    output "Less than test failed"

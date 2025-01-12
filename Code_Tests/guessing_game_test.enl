@@ -1,0 +1,21 @@
+target is now number between 1 and 100
+guessed is now 0
+attempts is now 0
+
+output "Number Guessing Game"
+output "Guess the number (1-100):"
+
+repeat until guessed == target
+    guess is now input
+    attempts is now attempts plus 1
+    
+    if guess < target
+        output "Too low!"
+    otherwise if guess > target
+        output "Too high!"
+    otherwise
+        guessed is now target
+        output "Correct!"
+
+output "You took this many attempts:"
+output attempts

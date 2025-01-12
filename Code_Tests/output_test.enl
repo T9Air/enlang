@@ -1,0 +1,10 @@
+# Test string output
+output "Hello World"
+
+# Test number output
+x is now 42
+output x
+
+# Test multiple outputs
+output "First line"
+output "Second line"

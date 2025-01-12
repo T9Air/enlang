@@ -1,0 +1,24 @@
+output "Simple Calculator"
+output "Enter first number:"
+num1 is now input
+output "Enter second number:"
+num2 is now input
+output "Enter operation (1:add, 2:subtract, 3:multiply, 4:divide):"
+operation is now input
+
+if operation == 1
+    result is now num1 plus num2
+    output "Result:"
+    output result
+otherwise if operation == 2
+    result is now num1 minus num2
+    output "Result:"
+    output result
+otherwise if operation == 3
+    result is now num1 times num2
+    output "Result:"
+    output result
+otherwise if operation == 4
+    result is now num1 divide num2
+    output "Result:"
+    output result

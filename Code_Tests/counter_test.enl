@@ -1,0 +1,9 @@
+count is now 0
+output "Counter Program"
+output "Enter number of iterations:"
+iterations is now input
+
+repeat iterations times
+    count is now count plus 1
+    output "Current count:"
+    output count

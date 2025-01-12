@@ -1,0 +1,30 @@
+x is now 10
+y is now 5
+
+Comment: Addition test
+result is now x plus y
+if result == 15
+    output "Addition test passed"
+otherwise
+    output "Addition test failed"
+
+Comment: Subtraction test
+result is now x minus y
+if result == 5
+    output "Subtraction test passed"
+otherwise
+    output "Subtraction test failed"
+
+Comment: Multiplication test
+result is now x times y
+if result == 50
+    output "Multiplication test passed"
+otherwise
+    output "Multiplication test failed"
+
+Comment: Division test
+result is now x divide y
+if result == 2
+    output "Division test passed"
+otherwise
+    output "Division test failed"

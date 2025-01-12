@@ -1,0 +1,8 @@
+count is now 0
+repeat 5 times
+    count is now count plus 1
+
+if count == 5
+    output "Loop test passed"
+otherwise
+    output "Loop test failed"
