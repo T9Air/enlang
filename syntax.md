@@ -3,7 +3,16 @@
 ## Variables
 
 - Declared implicitly.
-- Example: `x is now 10`
+- Variables can be:
+  - Strings: `x is now "String"`
+  - Numbers: `x is now 90`
+  - Boolean: `x is now <true/false>`
+  - Other variables:
+
+    ```enlang
+    x is now 90
+    y is now x
+    ```
 
 ## Comments
 
@@ -35,6 +44,11 @@
 
 - `==`, `!=`, `>`, `<`, `>=`, `<=`
 - Used in conditionals and loops
+- Supported inputs:
+  - Strings: `"String"`
+  - Numbers: `90`
+  - Boolean: `<true/false>`
+  - Variables: `var1`
 
 ## Conditionals
 

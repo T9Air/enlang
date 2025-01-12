@@ -103,6 +103,10 @@ class Lexer:
                         tokens.append(Token('OPERATOR', '*'))
                     case 'divide':
                         tokens.append(Token('OPERATOR', '/'))
+                    case 'true':
+                        tokens.append(Token('BOOLEAN', True))
+                    case 'false':
+                        tokens.append(Token('BOOLEAN', False))
                     case 'is':
                         self.skip_whitespace()
                         if self.current_char and self.current_char.isalpha():
@@ -227,8 +231,8 @@ class Lexer:
         return tokens
 
 if __name__ == '__main__':    
-    input_text = '''Comment: h
-output "Hello, World!"
+    input_text = '''
+x is now true
     '''
     lexer = Lexer(input_text)
     tokens = lexer.tokenize()

@@ -42,6 +42,13 @@ class String:
         return f'STRING({self.value})'
     def __repr__(self):
         return self.__str__()
+class Boolean:
+    def __init__(self, value):
+        self.value = value
+    def __str__(self):
+        return f'BOOLEAN({self.value})'
+    def __repr__(self):
+        return self.__str__()
 class Function:
     def __init__(self, name):
         self.name = name
@@ -186,6 +193,9 @@ class Parser:
         elif token.type == 'STRING':
             self.advance()
             return String(token.value)
+        elif token.type == 'BOOLEAN':
+            self.advance()
+            return Boolean(token.value)
         elif token.type == 'FUNCTION':
             self.advance()
             return Function(token.value)
@@ -316,13 +326,15 @@ class Parser:
                         self.advance()
                         next_num = self.get_term()
                         right = BinOp(right, op, next_num)
+                    elif isinstance(right, Boolean):
+                        right = Boolean(right.value)
                     left = Assign(left.name, right)
                     
         return left
 
 if __name__ == '__main__':
     input_text = '''
-output number between 1 and 10
+x is now false
 '''
     lexer = Lexer(input_text)
     tokens = lexer.tokenize()

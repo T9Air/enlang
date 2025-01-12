@@ -122,6 +122,8 @@ class Interpreter:
         return node
     def visit_String(self, node):
         return node.value
+    def visit_Boolean(self, node):
+        return node.value
     def visit_Body(self, node):
         for statement in node.statements:
             self.visit(statement)
@@ -132,8 +134,11 @@ class Interpreter:
 
 if __name__ == '__main__':
     input_text = '''
-Comment: Comment test
-output "Hello, World!"
+x is now false
+if x = true
+    output "x is true"
+otherwise
+    output "x is false"
 '''
     lexer = Lexer(input_text)
     tokens = lexer.tokenize()
