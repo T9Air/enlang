@@ -116,12 +116,11 @@ class Interpreter:
     def visit_Random(self, node):
         min = self.visit(node.min)
         max = self.visit(node.max)
-        return random.randint(max, min)
+        return random.randint(min, max)
 
 if __name__ == '__main__':
     input_text = '''
-x is now number between 1 and 10
-output x
+output number between 9384082340823 and 349053048503498
 '''
     lexer = Lexer(input_text)
     tokens = lexer.tokenize()

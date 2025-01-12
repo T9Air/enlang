@@ -98,7 +98,7 @@ class Input:
     def __repr__(self):
         return self.__str__()
 class Random:
-    def __init__(self, min, max):
+    def __init__(self, max, min):
         self.min = max
         self.max = min
     def __str__(self):
@@ -231,7 +231,6 @@ class Parser:
             if left.value == 'print':
                 if self.current_token.type == 'STRING':
                     right = self.get_term()
-                    left = Print(right)
                 elif self.current_token.type == 'NUMBER' or self.current_token.type == 'VARIABLE':
                     right = self.get_term()
                     if self.current_token.type == 'OPERATOR':
@@ -239,7 +238,13 @@ class Parser:
                         self.advance()
                         next = self.get_term()
                         right = BinOp(right, op, next)
-                    left = Print(right)
+                elif self.current_token.type == 'KEYWORD':
+                    if self.current_token.value == 'random':
+                        self.advance()
+                        min = self.get_term()
+                        max = self.get_term()
+                        right = Random(min, max)
+                left = Print(right)
             elif left.value == 'if':
                 right = self.get_term()
                 comparison = self.get_term()
@@ -318,7 +323,7 @@ class Parser:
 
 if __name__ == '__main__':
     input_text = '''
-x is now number between 1 and 10
+output number between 1 and 10
 '''
     lexer = Lexer(input_text)
     tokens = lexer.tokenize()
