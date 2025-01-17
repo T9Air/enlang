@@ -126,6 +126,15 @@ class Lexer:
                         tokens.append(Token('FUNCTION', self.get_identifier()))
                     case 'if':
                         tokens.append(Token('KEYWORD', 'if'))
+                    case 'however':
+                        self.skip_whitespace()
+                        if self.current_char and self.current_char.isalpha():
+                            identifier = self.get_identifier()
+                            if identifier == 'if':
+                                tokens.append(Token('KEYWORD', 'elif'))
+                            else:
+                                tokens.append(Token('VARIABLE', 'however'))
+                                tokens.append(Token('VARIABLE', identifier))
                     case 'otherwise':
                         tokens.append(Token('KEYWORD', 'else'))
                     case 'output':
@@ -232,7 +241,8 @@ class Lexer:
 
 if __name__ == '__main__':    
     input_text = '''
-x is now true
+however if 9 != 9
+    output "9 is not 9"
     '''
     lexer = Lexer(input_text)
     tokens = lexer.tokenize()

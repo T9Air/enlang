@@ -113,13 +113,18 @@ class Random:
     def __repr__(self):
         return self.__str__()
 class IfElse:
-    def __init__(self, condition, if_block, else_block = None):
+    def __init__(self, condition, if_block, elif_blocks=None, else_block=None):
         self.condition = condition
         self.if_block = if_block
+        self.elif_blocks = elif_blocks or []  # List of (condition, block) tuples
         self.else_block = else_block
+    
     def __str__(self):
-        result = f'IfElse: {self.condition.__str__()}'
-        result += f'        If Block: {self.if_block.__str__()}'
+        result = f'IfElse: {self.condition.__str__()}\n'
+        result += f'        If Block: {self.if_block.__str__()}\n'
+        for i, (cond, block) in enumerate(self.elif_blocks):
+            result += f'        Elif Block {i}: {cond.__str__()}\n'
+            result += f'                   {block.__str__()}\n'
         if self.else_block:
             result += f'        Else Block: {self.else_block.__str__()}'
         return result
@@ -218,7 +223,7 @@ class Parser:
         ast = []
         while self.current_block:
             if self.current_block.block_name == '11':
-                self.token_pos = -1
+                self.token_pos = -2
                 remove_first = True
             else:
                 remove_first = False
@@ -276,7 +281,22 @@ class Parser:
                         if block.block_name == self.current_token:
                             if_block = Body(block.code)
                     self.advance()
+                    
+                    elif_blocks = []
                     yes = self.get_term()
+                    while isinstance(yes, Keyword) and yes.value == 'elif':
+                        right = self.get_term()
+                        comparison = self.get_term()
+                        left = self.get_term()
+                        elif_condition = Condition(right, left, comparison)
+                        self.advance()
+                        for block in ast:
+                            if block.block_name == self.current_token:
+                                elif_block = Body(block.code)
+                        elif_blocks.append((elif_condition, elif_block))
+                        self.advance()
+                        yes = self.get_term()
+                    
                     if isinstance(yes, Keyword) and yes.value == 'else':
                         else_block = None
                         self.advance()
@@ -284,9 +304,9 @@ class Parser:
                             if block.block_name == self.current_token:
                                 else_block = Body(block.code)
                         self.advance()
-                        left = IfElse(condition, if_block, else_block)
+                        left = IfElse(condition, if_block, elif_blocks, else_block)
                     else:
-                        left = IfElse(condition, if_block)
+                        left = IfElse(condition, if_block, elif_blocks)
                 case 'for_loop':
                     right = self.get_term()
                     self.advance()
@@ -365,8 +385,12 @@ class Parser:
 
 if __name__ == '__main__':
     input_text = '''
-repeat until x = 9
-    output "56"
+if 9 == 5
+    output 6
+however if 9 == 9
+    output 5
+otherwise
+    output 56
 '''
     lexer = Lexer(input_text)
     tokens = lexer.tokenize()

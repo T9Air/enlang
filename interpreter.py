@@ -51,10 +51,13 @@ class Interpreter:
             case '<':
                 return left < right
     def visit_IfElse(self, node):
-        condition = self.visit(node.condition)
-        if condition:
+        if self.visit(node.condition):
             self.visit(node.if_block)
         else:
+            for elif_condition, elif_block in node.elif_blocks:
+                if self.visit(elif_condition):
+                    self.visit(elif_block)
+                    return
             if node.else_block:
                 self.visit(node.else_block)
     def visit_ForLoop(self, node):
@@ -137,11 +140,14 @@ class Interpreter:
 
 if __name__ == '__main__':
     input_text = '''
-x is now false
-if x = true
-    output "x is true"
+if 9 == 5
+    output 6
+however if 9 == 4
+    output 5
+however if 9 == 9
+    output 562
 otherwise
-    output "x is false"
+    output 56
 '''
     lexer = Lexer(input_text)
     tokens = lexer.tokenize()

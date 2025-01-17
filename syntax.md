@@ -53,19 +53,25 @@
 ## Conditionals
 
 - Begins with `if <condition>`
+- Optional `however if <condition>`
+  - Unlimited amount
 - Optional `otherwise` block
 - Example:
 
   ```enlang
   if 1 == 2
       output "Impossible"
+  however if 1 == 3
+      output "Oops"
+  hovewer if 1 == 4
+      output "Come on!"
   otherwise
       output "Always runs"
   ```
 
 ## Nested Conditionals
 
-- It's possible to place an `if` inside another `if` or inside an `otherwise` block.
+- It's possible to place an `if` inside another `if`, `however if`, or `otherwise` block.
 - Example:
 
   ```enlang
