@@ -186,31 +186,33 @@ class Parser:
         token = self.current_token
         if isinstance(token, str):
             return self.current_token
-        elif token.type == 'NUMBER':
-            self.advance()
-            return Number(token.value)
-        elif token.type == 'VARIABLE':
-            self.advance()
-            return Variable(token.value)
-        elif token.type == 'STRING':
-            self.advance()
-            return String(token.value)
-        elif token.type == 'BOOLEAN':
-            self.advance()
-            return Boolean(token.value)
-        elif token.type == 'FUNCTION':
-            self.advance()
-            return Function(token.value)
-        elif token.type == 'OPERATOR':
-            self.advance()
-            return token.value
-        elif token.type == 'COMPARE':
-            self.advance()
-            return token.value
         elif self.current_token.type == 'KEYWORD':
             token = self.current_token
             self.advance()
             return Keyword(token.value)
+        else:
+            match token.type:
+                case 'NUMBER':
+                    self.advance()
+                    return Number(token.value)
+                case 'VARIABLE':
+                    self.advance()
+                    return Variable(token.value)
+                case 'STRING':
+                    self.advance()
+                    return String(token.value)
+                case 'BOOLEAN':
+                    self.advance()
+                    return Boolean(token.value)
+                case 'FUNCTION':
+                    self.advance()
+                    return Function(token.value)
+                case 'OPERATOR':
+                    self.advance()
+                    return token.value
+                case 'COMPARE':
+                    self.advance()
+                    return token.value             
     def parse_blocks(self):
         global ast
         ast = []
@@ -248,90 +250,91 @@ class Parser:
     def parse_expression(self):
         left = self.get_term()
         if isinstance(left, Keyword):
-            if left.value == 'print':
-                right = self.get_term()
-                if self.current_token.type == 'NUMBER' or self.current_token.type == 'VARIABLE':
-                    if self.current_token.type == 'OPERATOR':
-                        op = self.current_token.value
-                        self.advance()
-                        next = self.get_term()
-                        right = BinOp(right, op, next)
-                elif self.current_token.type == 'KEYWORD':
-                    if self.current_token.value == 'random':
-                        self.advance()
-                        min = self.get_term()
-                        max = self.get_term()
-                        right = Random(min, max)
-                left = Print(right)
-            elif left.value == 'if':
-                right = self.get_term()
-                comparison = self.get_term()
-                left = self.get_term()
-                condition = Condition(right, left, comparison)
-                self.advance()
-                for block in ast:
-                    if block.block_name == self.current_token:
-                        if_block = Body(block.code)
-                self.advance()
-                yes = self.get_term()
-                if isinstance(yes, Keyword) and yes.value == 'else':
-                    else_block = None
+            match left.value:
+                case 'print':
+                    right = self.get_term()
+                    if self.current_token.type == 'NUMBER' or self.current_token.type == 'VARIABLE':
+                        if self.current_token.type == 'OPERATOR':
+                            op = self.current_token.value
+                            self.advance()
+                            next = self.get_term()
+                            right = BinOp(right, op, next)
+                    elif self.current_token.type == 'KEYWORD':
+                        if self.current_token.value == 'random':
+                            self.advance()
+                            min = self.get_term()
+                            max = self.get_term()
+                            right = Random(min, max)
+                    left = Print(right)
+                case 'if':
+                    right = self.get_term()
+                    comparison = self.get_term()
+                    left = self.get_term()
+                    condition = Condition(right, left, comparison)
                     self.advance()
                     for block in ast:
                         if block.block_name == self.current_token:
-                            else_block = Body(block.code)
+                            if_block = Body(block.code)
                     self.advance()
-                    left = IfElse(condition, if_block, else_block)
-                else:
-                    left = IfElse(condition, if_block)
-            elif left.value == 'for_loop':
-                right = self.get_term()
-                self.advance()
-                for block in ast:
-                    if block.block_name == self.current_token:
-                        body = Body(block.code)
-                left = ForLoop(right, body)
-                self.advance()
-            elif left.value == 'while_loop':
-                left = self.get_term()
-                comparison = self.get_term()
-                right = self.get_term()
-                self.advance()
-                for block in ast:
-                    if block.block_name == self.current_token:
-                        body = Body(block.code)
-                self.advance()
-                left = WhileLoop(left, comparison, right, body)
-            elif left.value == 'create_function':
-                right = self.get_term()
-                self.advance()
-                for block in ast:
-                    if block.block_name == self.current_token:
-                        body = Body(block.code)
-                left = CreateFunction(right, body)
-                self.advance()
-            elif left.value == 'run_function':
-                right = self.get_term()
-                left = RunFunction(right)
-            elif left.value == 'assign':
-                name = self.current_block.code[self.token_pos - 2]
-                name = name.value
-                right = self.get_term()
-                if isinstance(right, Keyword):
-                    if right.value == 'input':
-                        right = Input(left.name)
-                    elif right.value == 'random':
-                        min = self.get_term()
-                        max = self.get_term()
-                        right = Random(min, max)
-                elif self.current_token and self.current_token.type == 'OPERATOR':
-                    op = self.current_token.value
+                    yes = self.get_term()
+                    if isinstance(yes, Keyword) and yes.value == 'else':
+                        else_block = None
+                        self.advance()
+                        for block in ast:
+                            if block.block_name == self.current_token:
+                                else_block = Body(block.code)
+                        self.advance()
+                        left = IfElse(condition, if_block, else_block)
+                    else:
+                        left = IfElse(condition, if_block)
+                case 'for_loop':
+                    right = self.get_term()
                     self.advance()
-                    next_num = self.get_term()
-                    right = BinOp(right, op, next_num)
-                elif isinstance(right, Boolean):
-                    right = Boolean(right.value)
-                left = Assign(name, right)
+                    for block in ast:
+                        if block.block_name == self.current_token:
+                            body = Body(block.code)
+                    left = ForLoop(right, body)
+                    self.advance()
+                case 'while_loop':
+                    left = self.get_term()
+                    comparison = self.get_term()
+                    right = self.get_term()
+                    self.advance()
+                    for block in ast:
+                        if block.block_name == self.current_token:
+                            body = Body(block.code)
+                    self.advance()
+                    left = WhileLoop(left, comparison, right, body)
+                case 'create_function':
+                    right = self.get_term()
+                    self.advance()
+                    for block in ast:
+                        if block.block_name == self.current_token:
+                            body = Body(block.code)
+                    left = CreateFunction(right, body)
+                    self.advance()
+                case 'run_function':
+                    right = self.get_term()
+                    left = RunFunction(right)
+                case 'assign':
+                    name = self.current_block.code[self.token_pos - 2]
+                    name = name.value
+                    right = self.get_term()
+                    if isinstance(right, Keyword):
+                        if right.value == 'input':
+                            right = Input(left.name)
+                        elif right.value == 'random':
+                            min = self.get_term()
+                            max = self.get_term()
+                            right = Random(min, max)
+                    elif self.current_token and self.current_token.type == 'OPERATOR':
+                        op = self.current_token.value
+                        self.advance()
+                        next_num = self.get_term()
+                        right = BinOp(right, op, next_num)
+                    elif isinstance(right, Boolean):
+                        right = Boolean(right.value)
+                    left = Assign(name, right)
 
         elif left:
             if self.current_token.type == 'OPERATOR':

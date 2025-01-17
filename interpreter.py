@@ -24,30 +24,32 @@ class Interpreter:
         left = self.visit(node.left)
         right = self.visit(node.right)
         try:
-            if node.op == '+':
-                return left + right
-            elif node.op == '-':
-                return left - right
-            elif node.op == '*':
-                return left * right
-            elif node.op == '/':
-                if right == 0:
-                    raise Exception('Runtime Error: Division by zero')
-                return left / right
+            match node.op:
+                case '+':
+                    return left + right
+                case '-':
+                    return left - right
+                case '*':
+                    return left * right
+                case '/':
+                    if right == 0:
+                        raise Exception('Runtime Error: Division by zero')
+                    return left / right
         except TypeError:
             raise Exception(f'Runtime Error: Invalid operation {left} {node.op} {right}')
     def visit_Condition(self, node):
         left = self.visit(node.left)
         right = self.visit(node.right)
         
-        if node.op == '==':
-            return left == right
-        elif node.op == '!=':
-            return left != right
-        elif node.op == '>':
-            return left > right
-        elif node.op == '<':
-            return left < right
+        match node.op:
+            case '==':
+                return left == right
+            case '!=':
+                return left != right
+            case '>':
+                return left > right
+            case '<':
+                return left < right
     def visit_IfElse(self, node):
         condition = self.visit(node.condition)
         if condition:
@@ -64,24 +66,25 @@ class Interpreter:
         op = self.visit(node.op)
         right = self.visit(node.right)
         while True:
-            if op == '==':
-                if left == right:
-                    break
-            elif op == '!=':
-                if left != right:
-                    break
-            elif op == '>':
-                if left > right:
-                    break
-            elif op == '<':
-                if left < right:
-                    break
-            elif op == '>=':
-                if left >= right:
-                    break
-            elif op == '<=':
-                if left <= right:
-                    break
+            match op:
+                case '==':
+                    if left == right:
+                        break
+                case '!=':
+                    if left != right:
+                        break
+                case '>':
+                    if left > right:
+                        break
+                case '<':
+                    if left < right:
+                        break
+                case '>=':
+                    if left >= right:
+                        break
+                case '<=':
+                    if left <= right:
+                        break
             self.visit(node.body)
             left = self.visit(node.left)
             right = self.visit(node.right)
