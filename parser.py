@@ -184,7 +184,9 @@ class Parser:
         self.current_token = self.current_block.code[self.token_pos]
     def get_term(self):
         token = self.current_token
-        if token.type == 'NUMBER':
+        if isinstance(token, str):
+            return self.current_token
+        elif token.type == 'NUMBER':
             self.advance()
             return Number(token.value)
         elif token.type == 'VARIABLE':
@@ -213,7 +215,15 @@ class Parser:
         global ast
         ast = []
         while self.current_block:
-            ast.append(self.parse_block())
+            if self.current_block.block_name == '11':
+                self.token_pos = -1
+                remove_first = True
+            else:
+                remove_first = False
+            ast_block = self.parse_block()
+            if remove_first == True:
+                ast_block.code = ast_block.code[1:]
+            ast.append(ast_block)
         final_block = ast[-1]
         final_block = final_block.code
         ast = final_block
@@ -239,10 +249,8 @@ class Parser:
         left = self.get_term()
         if isinstance(left, Keyword):
             if left.value == 'print':
-                if self.current_token.type == 'STRING':
-                    right = self.get_term()
-                elif self.current_token.type == 'NUMBER' or self.current_token.type == 'VARIABLE':
-                    right = self.get_term()
+                right = self.get_term()
+                if self.current_token.type == 'NUMBER' or self.current_token.type == 'VARIABLE':
                     if self.current_token.type == 'OPERATOR':
                         op = self.current_token.value
                         self.advance()
@@ -292,6 +300,7 @@ class Parser:
                 for block in ast:
                     if block.block_name == self.current_token:
                         body = Body(block.code)
+                self.advance()
                 left = WhileLoop(left, comparison, right, body)
             elif left.value == 'create_function':
                 right = self.get_term()
@@ -304,6 +313,25 @@ class Parser:
             elif left.value == 'run_function':
                 right = self.get_term()
                 left = RunFunction(right)
+            elif left.value == 'assign':
+                name = self.current_block.code[self.token_pos - 2]
+                name = name.value
+                right = self.get_term()
+                if isinstance(right, Keyword):
+                    if right.value == 'input':
+                        right = Input(left.name)
+                    elif right.value == 'random':
+                        min = self.get_term()
+                        max = self.get_term()
+                        right = Random(min, max)
+                elif self.current_token and self.current_token.type == 'OPERATOR':
+                    op = self.current_token.value
+                    self.advance()
+                    next_num = self.get_term()
+                    right = BinOp(right, op, next_num)
+                elif isinstance(right, Boolean):
+                    right = Boolean(right.value)
+                left = Assign(name, right)
 
         elif left:
             if self.current_token.type == 'OPERATOR':
@@ -334,7 +362,8 @@ class Parser:
 
 if __name__ == '__main__':
     input_text = '''
-x is now false
+repeat until x = 9
+    output "56"
 '''
     lexer = Lexer(input_text)
     tokens = lexer.tokenize()

@@ -52,7 +52,8 @@ class Blockifier:
                             break
                 elif self.current_token.value < current_indent:
                     if len(name) > self.current_token.value + 2:
-                        name.pop()
+                        while len(name) > self.current_token.value + 2:
+                            name.pop()
                     for b in block_names:    
                         check = ''.join(name[:-1])
                         if check == b:
@@ -77,19 +78,14 @@ class Blockifier:
         return blocks
 
 if __name__ == '__main__':        
-    input_text = '''x is now input
-    dnn
-    fd
-        jsdio
-    sd3
-        jd
-            jio
-ds
-    jsid
-sjd
+    input_text = '''
+repeat 5 times
+    output 5
 '''
     lexer = Lexer(input_text)
     tokens = lexer.tokenize()
     blockifier = Blockifier(tokens)
     blocks = blockifier.blockify()
-    print(blocks)
+    for block in blocks:
+        print(block)
+        print()
