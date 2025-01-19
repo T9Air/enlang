@@ -222,14 +222,7 @@ class Parser:
         global ast
         ast = []
         while self.current_block:
-            if self.current_block.block_name == '11':
-                self.token_pos = -2
-                remove_first = True
-            else:
-                remove_first = False
             ast_block = self.parse_block()
-            if remove_first == True:
-                ast_block.code = ast_block.code[1:]
             ast.append(ast_block)
         final_block = ast[-1]
         final_block = final_block.code
@@ -385,12 +378,13 @@ class Parser:
 
 if __name__ == '__main__':
     input_text = '''
-if 9 == 5
-    output 6
-however if 9 == 9
-    output 5
-otherwise
-    output 56
+create testFunction
+    if 9 == 10
+        output "Function test passed"
+    otherwise
+        output "Function test failed"
+
+run testFunction
 '''
     lexer = Lexer(input_text)
     tokens = lexer.tokenize()
