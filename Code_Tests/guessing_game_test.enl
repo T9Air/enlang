@@ -12,12 +12,11 @@ repeat until guessed == target
     output guess
     if guess < target
         output "Too low!"
+    however if guess > target
+        output "Too high!"
     otherwise
-        if guess > target
-            output "Too high!"
-        otherwise
-            guessed is now target
-            output "Correct!"
+        guessed is now target
+        output "Correct!"
 
 output "You took this many attempts:"
 output attempts

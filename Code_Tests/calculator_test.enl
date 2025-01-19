@@ -10,15 +10,15 @@ if operation == 1
     result is now num1 plus num2
     output "Result:"
     output result
-otherwise if operation == 2
+however if operation == 2
     result is now num1 minus num2
     output "Result:"
     output result
-otherwise if operation == 3
+however if operation == 3
     result is now num1 times num2
     output "Result:"
     output result
-otherwise if operation == 4
+however if operation == 4
     result is now num1 divide num2
     output "Result:"
     output result
